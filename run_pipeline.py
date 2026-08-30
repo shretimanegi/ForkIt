@@ -2,7 +2,9 @@
 import sys, time
 from core.preprocess import preprocess_xtf
 
-XTF = sys.argv[1] if len(sys.argv) > 1 else "/Users/jaswant/sensor-debris/data/NBP050504A.XTF"
+if len(sys.argv) < 2:
+    sys.exit("Pass an XTF path: python3 run_pipeline.py /path/to/file.xtf")
+XTF = sys.argv[1]
 
 t = time.time()
 res = preprocess_xtf(XTF, out_dir="out", tile_size=640, overlap=0.2)
