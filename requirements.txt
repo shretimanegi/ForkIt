@@ -1,0 +1,5 @@
+pyxtf
+numpy
+opencv-python-headless
+pandas
+scipy
