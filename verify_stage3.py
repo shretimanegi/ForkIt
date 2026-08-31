@@ -4,7 +4,10 @@ import numpy as np, cv2
 from core.preprocess import (preprocess_xtf, load_tile_index, locate_tile_pixel,
                              bbox_to_metres, display_limits, _apply_limits)
 
-XTF = "/Users/jaswant/sensor-debris/data/NBP050504A.XTF"
+import sys
+if len(sys.argv) < 2:
+    sys.exit("Pass an XTF path: python3 verify_stage3.py /path/to/file.xtf")
+XTF = sys.argv[1]
 res = preprocess_xtf(XTF, out_dir="out", tile_size=640, overlap=0.2)
 cleaned, tab, idx = res["cleaned"], res["ping_table"], res["tile_index"]
 TD = res["tile_dir"]
