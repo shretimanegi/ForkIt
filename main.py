@@ -7,9 +7,11 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks, s
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+# Import Pair 2's preprocessing pipeline
+from core.preprocess import preprocess_xtf
+
 app = FastAPI(title="Sonar Debris Detection API")
 
-# Enable CORS for B3's frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,13 +20,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Step 1: Storage directories
 UPLOAD_DIR = "uploads"
 OUTPUT_DIR = "outputs"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Step 2: Frozen Schema Contract
 class DetectionItem(BaseModel):
     id: int
     class_name: str
@@ -39,18 +39,32 @@ class DetectionItem(BaseModel):
     height_m: float
     shadow_len_px: int
 
-# Step 3: In-Memory Job Registry
 jobs_db: Dict[str, Dict[str, Any]] = {}
 
-# Step 4: Background Worker
+def execute_preprocessing(file_path: str, job_out_dir: str):
+    """Synchronous CPU worker running Pair 2's preprocessing."""
+    return preprocess_xtf(file_path, out_dir=job_out_dir, tile_size=640, overlap=0.2)
+
 async def run_pipeline_task(job_id: str, file_path: str):
     try:
         jobs_db[job_id]["status"] = "processing"
         
-        # Simulated pipeline delay (Days 3-4: replace with real pipeline calls)
-        await asyncio.sleep(5)
+        job_out_dir = os.path.join(OUTPUT_DIR, job_id)
+        os.makedirs(job_out_dir, exist_ok=True)
         
-        # Mock detection result payload matching the contract
+        # Run Pair 2's preprocessing in a background thread
+        res = await asyncio.to_thread(execute_preprocessing, file_path, job_out_dir)
+        
+        # Store metadata extracted by Pair 2
+        jobs_db[job_id]["metadata"] = {
+            "pings": len(res["ping_table"]),
+            "meters_per_pixel": float(res["meters_per_pixel"]),
+            "tile_count": len(res["tile_index"].tiles),
+            "tile_dir": str(res["tile_dir"]),
+            "pngs": res.get("pngs", {})
+        }
+        
+        # Placeholder mock detections (Pair 1 YOLO will replace this on Day 4)
         jobs_db[job_id]["results"] = [
             {
                 "id": 1,
@@ -65,35 +79,20 @@ async def run_pipeline_task(job_id: str, file_path: str):
                 "width_m": 6.2,
                 "height_m": 3.1,
                 "shadow_len_px": 85
-            },
-            {
-                "id": 2,
-                "class_name": "ghost_net",
-                "confidence": 0.81,
-                "bbox_px": [410, 600, 470, 680],
-                "ping_start": 1450,
-                "ping_end": 1490,
-                "lat": 18.9255,
-                "lon": 72.8390,
-                "length_m": 8.0,
-                "width_m": 4.5,
-                "height_m": 1.2,
-                "shadow_len_px": 30
             }
         ]
+        
         jobs_db[job_id]["status"] = "completed"
         
     except Exception as exc:
         jobs_db[job_id]["status"] = "failed"
         jobs_db[job_id]["error"] = str(exc)
 
-# Step 5: Routes
 @app.post("/upload", status_code=status.HTTP_202_ACCEPTED)
 async def upload_sonar_file(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     job_id = str(uuid.uuid4())
     saved_file_path = os.path.join(UPLOAD_DIR, f"{job_id}_{file.filename}")
     
-    # Stream and save file to local disk
     with open(saved_file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
         
@@ -102,10 +101,10 @@ async def upload_sonar_file(background_tasks: BackgroundTasks, file: UploadFile 
         "filename": file.filename,
         "file_path": saved_file_path,
         "results": [],
+        "metadata": {},
         "error": None
     }
     
-    # Enqueue background execution
     background_tasks.add_task(run_pipeline_task, job_id, saved_file_path)
     
     return {
@@ -119,10 +118,10 @@ async def upload_sonar_file(background_tasks: BackgroundTasks, file: UploadFile 
 async def get_job_status(job_id: str):
     if job_id not in jobs_db:
         raise HTTPException(status_code=404, detail="Job ID not found")
-        
     return {
         "job_id": job_id,
         "status": jobs_db[job_id]["status"],
+        "metadata": jobs_db[job_id].get("metadata"),
         "error": jobs_db[job_id].get("error")
     }
 
@@ -130,19 +129,17 @@ async def get_job_status(job_id: str):
 async def get_results(job_id: str):
     if job_id not in jobs_db:
         raise HTTPException(status_code=404, detail="Job ID not found")
-        
-    current_status = jobs_db[job_id]["status"]
     
+    current_status = jobs_db[job_id]["status"]
     if current_status in ["queued", "processing"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Results not ready. Current job status: {current_status}"
         )
-    
     if current_status == "failed":
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Job processing failed: {jobs_db[job_id].get('error')}"
+            detail=f"Pipeline processing failed: {jobs_db[job_id].get('error')}"
         )
         
     return jobs_db[job_id]["results"]
