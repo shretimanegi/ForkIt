@@ -6,6 +6,7 @@ from typing import List, Dict, Any
 from fastapi import FastAPI, File, UploadFile, HTTPException, BackgroundTasks, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from fastapi.responses import FileResponse
 
 # Import Pair 2's preprocessing pipeline
 from core.preprocess import preprocess_xtf
@@ -124,6 +125,17 @@ async def get_job_status(job_id: str):
         "metadata": jobs_db[job_id].get("metadata"),
         "error": jobs_db[job_id].get("error")
     }
+
+@app.get("/waterfall/{job_id}")
+async def get_waterfall(job_id: str):
+    if job_id not in jobs_db:
+        raise HTTPException(status_code=404, detail="Job ID not found")
+
+    waterfall_path = os.path.join(OUTPUT_DIR, job_id, "waterfall.png")
+    if not os.path.isfile(waterfall_path):
+        raise HTTPException(status_code=404, detail="Waterfall image not available")
+
+    return FileResponse(waterfall_path, media_type="image/png", filename="waterfall.png")
 
 @app.get("/results/{job_id}", response_model=List[DetectionItem])
 async def get_results(job_id: str):
