@@ -1,12 +1,10 @@
-# python virtualenv (327 MB, machine-specific)
-.venv/
+venv/
 __pycache__/
-*.py[cod]
+*.pyc
+node_modules/
+dist/
 
-# raw sonar data lives outside the repo
-*.XTF
-*.xtf
+models/*.pt
 
-# generated outputs - regenerate with: python run_pipeline.py
-out/
-out_square/
+outputs/*
+uploads/*

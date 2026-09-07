@@ -5,3 +5,5 @@ pandas
 scipy
 pyproj
 geojson
+fastapi
+python-multipart

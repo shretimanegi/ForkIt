@@ -1,0 +1,6 @@
+import { ChevronRight } from 'lucide-react';
+
+const prettyClass = (value) => value.replace('_', ' ');
+export default function DetectionTable({ detections, selectedId, onSelect }) {
+  return <section className="card table-card"><div className="section-heading"><div><p className="eyebrow">DETECTION LOG</p><h2>Objects detected <span className="count-badge">{detections.length}</span></h2></div><span className="muted-label">SORT: CONFIDENCE</span></div><div className="table-scroll"><table><thead><tr><th>ID</th><th>Class</th><th>Confidence</th><th>Latitude</th><th>Longitude</th><th /></tr></thead><tbody>{detections.map((detection) => <tr key={detection.id} className={selectedId === detection.id ? 'active-row' : ''} onClick={() => onSelect(detection.id)}><td><span className="id-number">#{String(detection.id).padStart(2, '0')}</span></td><td><span className={`class-dot class-${detection.class}`} />{prettyClass(detection.class)}</td><td><span className="confidence"><i style={{ width: `${detection.confidence * 100}%` }} />{Math.round(detection.confidence * 100)}%</span></td><td>{detection.lat.toFixed(4)}</td><td>{detection.lon.toFixed(4)}</td><td><ChevronRight size={16} className="row-chevron" /></td></tr>)}</tbody></table></div></section>;
+}

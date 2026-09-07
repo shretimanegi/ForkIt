@@ -1,0 +1,7 @@
+import { Ruler, MapPinned } from 'lucide-react';
+const prettyClass = (value) => value.replace('_', ' ');
+export default function DetectionDetails({ detection }) {
+  if (!detection) return <section className="card details-card empty-details"><MapPinned size={28} /><p>Select a detection to inspect its measurements</p></section>;
+  const fields = [['Latitude', detection.lat.toFixed(5)], ['Longitude', detection.lon.toFixed(5)], ['Length', `${detection.length_m} m`], ['Width', `${detection.width_m} m`], ['Height', `${detection.height_m} m`], ['Shadow length', `${detection.shadow_len_px} px`]];
+  return <section className="card details-card"><div className="section-heading"><div><p className="eyebrow">INSPECTION</p><h2>Detection #{String(detection.id).padStart(2, '0')}</h2></div><span className="confidence-large">{Math.round(detection.confidence * 100)}%</span></div><div className="detail-class"><span className={`class-dot class-${detection.class}`} /><strong>{prettyClass(detection.class)}</strong><span className="class-tag">AI CLASS</span></div><div className="detail-grid">{fields.map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}</div><div className="bbox-info"><div><Ruler size={15} /><span>Bounding box pixels</span></div><code>[{detection.bbox_px.join(', ')}]</code><small>Ping range {detection.ping_start} — {detection.ping_end}</small></div></section>;
+}
