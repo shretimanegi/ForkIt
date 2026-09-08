@@ -111,3 +111,9 @@ python verify_stage3.py           # tiling + locate_tile_pixel checks
 `verify_stage3.py` asserts that every tile is pixel-identical to the full
 image it was cut from, and hand-checks all 13 fields `locate_tile_pixel`
 returns against values computed independently.
+
+
+DATASET LINE from pair 1:
+   https://drive.google.com/file/d/1uTZYvVkZ9on7m-VaZ7bKpEma1ktmbm5M/view?usp=sharing
+   https://drive.google.com/file/d/1yarac3YOks15XKhGV_dGPJsTNfaKv2VC/view?usp=sharing
+   extract and upload these dataset in the google drive and run code sih.py
