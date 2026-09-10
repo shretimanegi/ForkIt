@@ -6,7 +6,7 @@ traceable to the ping that saw it, its GPS coordinate, and its size in metres.
 ## 1. Project Information
 
 - **Project Title:** SonarWatch – AI-Powered Underwater Debris and Anomaly Detection from Side-Scan Sonar
-- **PS ID:** 26057
+- **PS ID:** SIH26057
 - **PS Title:** AI-Powered Automated Underwater Marine Debris and Anomaly Detection System using Side-Scan Sonar Imagery
 - **Category:** Software
 - **Theme:** Disaster Management
