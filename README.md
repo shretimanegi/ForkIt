@@ -220,7 +220,7 @@ because they are third-party data with their own licence.
 
 | What | Size | Required for | Where to put it |
 |---|---|---|---|
-| **Trained model weights** `best.pt` | ~5.7 MB | **Detection. Without it the pipeline runs but returns zero detections.** | `src/backend/models/best.pt` |
+| **[Trained model weights `best.pt`](https://drive.google.com/file/d/1v1tmOJGpCuScoK6_7rUuwlC1tbNRlBRH/view?usp=sharing)** | ~5.7 MB | **Detection. Without it the pipeline runs but returns zero detections.** | `src/backend/models/best.pt`|
 | **Test sonar data** `NBP050504A.XTF` | ~17 MB | Trying the system without your own survey file | anywhere; you select it in the UI |
 | **Training dataset** (YOLO format) | — | Retraining only. Not needed to run the app. | Google Drive |
 
