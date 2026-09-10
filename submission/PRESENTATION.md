@@ -6,4 +6,4 @@
 
 ## External presentation link (only if needed)
 
-`[https://drive.google.com/file/d/1OUzzonOiNhezQfyVC4iYVBzd8P-tQiWq/view?usp=sharing](https://drive.google.com/file/d/1OUzzonOiNhezQfyVC4iYVBzd8P-tQiWq/view?usp=sharing)`
+[https://drive.google.com/file/d/1OUzzonOiNhezQfyVC4iYVBzd8P-tQiWq/view?usp=sharing](https://drive.google.com/file/d/1OUzzonOiNhezQfyVC4iYVBzd8P-tQiWq/view?usp=sharing)
