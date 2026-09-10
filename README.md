@@ -329,11 +329,12 @@ the Chilean Inland Passage (NBP0505 expedition, Marine Geoscience Data System).
 
 | Name | Role |
 |---|---|
-| Shretima Negi | `<ADD_ROLE>` |
-| Yashvi Garg | `<ADD_ROLE>` |
-| Ananya Gupta | `<ADD_ROLE>` |
-| Manasvi Sharma | `<ADD_ROLE>` |
-| Tanisha Gautam | `<ADD_ROLE>` |
+| Shretima Negi | `Reading raw file` |
+| Yashvi Garg | `Backend` |
+| Ananya Gupta | `Frontend` |
+| Manasvi Sharma | `Geotagging` |
+| Tanisha Gautam | `Yolo training` |
+| Sonal Verma | `Dataset preparation` |
 
 ## Data Attribution
 
