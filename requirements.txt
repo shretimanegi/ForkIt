@@ -1,9 +1,18 @@
+# Sonar file parsing and signal processing
 pyxtf
 numpy
 opencv-python-headless
 pandas
 scipy
+
+# Geospatial
 pyproj
 geojson
+
+# Machine learning (pulls in torch)
+ultralytics
+
+# API server
 fastapi
+uvicorn
 python-multipart

@@ -1,10 +1,32 @@
-venv/
+# Python
 __pycache__/
 *.pyc
+venv/
+.venv/
+.env
+
+# Node
 node_modules/
 dist/
 
-models/*.pt
+# IDE
+.vscode/
+.idea/
 
-outputs/*
-uploads/*
+# OS
+.DS_Store
+
+# Secrets
+*.pem
+*.key
+
+# Model weights - downloaded separately, see README section 11.2
+src/backend/models/*.pt
+
+# Runtime job data (API uploads and per-job outputs)
+src/backend/uploads/*
+src/backend/outputs/*
+
+# Local pipeline output from scripts/run_pipeline.py and scripts/verify_stage3.py
+out/
+out_square/
