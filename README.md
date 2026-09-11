@@ -198,8 +198,8 @@ Captured from a live run on `NBP050504A.XTF`.
 ### 11.1 Clone and install dependencies
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
-cd SSS-pipeline
+git clone https://github.com/shretimanegi/ForkIt
+cd ForkIt
 
 # Backend
 python3 -m venv .venv
